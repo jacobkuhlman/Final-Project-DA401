@@ -1,0 +1,183 @@
+---
+title: "Google Trends and Price"
+author: "Jacob Kuhlman"
+date: "11/9/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r}
+library("ggpubr")
+library("readxl")
+```
+
+
+```{r message=FALSE, warning=FALSE}
+setwd("~/Desktop/Final Project DA /Google Trends and Price/Trends_and_Price_Day")
+
+data = read_excel("/Users/jacobkuhlman/Desktop/Final Project DA /Google Trends and Price/Trends_and_Price_Year.xlsx")
+data3 = read_excel("/Users/jacobkuhlman/Desktop/Final Project DA /Google Trends and Price/Sentiment_and_price.xlsx")
+
+```
+
+
+# Getting the pearson correlation between Twitter Sentiment and Bitcoin close price 
+```{r}
+Twitter_sentiment_corr = cor.test(data3$Close, data3$compound,  method = "pearson", use = "complete.obs")
+Twitter_sentiment_corr
+```
+
+
+
+
+# Creating the density plot for Close price of Bitcoin (Twitter Analysis)
+```{r}
+Twitter_close_density = ggdensity(data3$Close, 
+          
+          xlab = "Close Price of Bitcoin")
+
+#ggarrange(Twitter_close_density, ncol = 1, nrow = 1)%>% ggexport(filename = "Correlation_Spearman_Twitter.png", width=600, height=400, pointsize=11)
+```
+
+
+
+# Subsetting the Google Trends data to get data for specific cryptocurrencies
+```{r}
+data_bitcoin <- subset(data, Cryptocurrency_type == "Bitcoin")
+data_cardano <- subset(data, Cryptocurrency_type == "Cardano")
+data_tether = subset(data, Cryptocurrency_type == "Tether")
+data_dogecoin = subset(data, Cryptocurrency_type == "Dodgecoin")
+data_ethereum = subset(data, Cryptocurrency_type == "Ethereum")
+data_monero = subset(data, Cryptocurrency_type == "Monero")
+data_XRP = subset(data, Cryptocurrency_type == "XRP")
+
+
+```
+
+
+# Creating density plot and conducting Shapiro test to get distribution of 7 cryptocurrencies (Google Trends Analysis)
+```{r}
+Bitcoin_density = ggdensity(data_bitcoin$Close, 
+          
+          xlab = "Close Price Bitcoin")
+
+Cardano_density = ggdensity(data_cardano$Close, 
+          
+          xlab = "Close Price of Cardano")
+
+Tether_density = ggdensity(data_tether$Close, 
+          
+          xlab = "Close Price of Tether")
+
+Dogecoin_density = ggdensity(data_dogecoin$Close, 
+          
+          xlab = "Close Price of Dogecoin")
+
+Ethereum_density = ggdensity(data_ethereum$Close, 
+          
+          xlab = "Close Price of Ethereum")
+
+Monero_density = ggdensity(data_monero$Close, 
+          
+          xlab = "Close Price of Monero")
+
+XRP_density = ggdensity(data_XRP$Close, 
+          
+          xlab = "Close Price of XRP")
+
+
+#ggarrange(Bitcoin_density, Cardano_density, Tether_density, Ethereum_density , Dogecoin_density,Monero_density,XRP_density,  ncol = 2, nrow=2) %>% ggexport(filename = "Denisty_4.png", width=400, height=350, pointsize=11)
+
+Bitcoin_Shapiro = shapiro.test(data_bitcoin$Close)
+Cardano_Shapiro = shapiro.test(data_cardano$Close)
+Tether_Shapiro = shapiro.test(data_tether$Close)
+Dogecoin_Shapiro = shapiro.test(data_dogecoin$Close)
+Ethereum_Shapiro = shapiro.test(data_ethereum$Close)
+Monero_Shapiro = shapiro.test(data_monero$Close)
+XRP_Shapiro = shapiro.test(data_XRP$Close)
+```
+
+
+# Getting the spearman correlation between search volume and close price for the 7 cryptocurrencies
+```{r}
+Bitcoin_Correlation = cor(data_bitcoin$Close, data_bitcoin$`Search Volume`,  method = "spearman", use = "complete.obs")
+Cardano_Correlation = cor(data_cardano$Close, data_cardano$`Search Volume`,  method = "spearman",  use = "complete.obs")
+Tether_Correlation = cor(data_tether$Close, data_tether$`Search Volume`,  method = "spearman",  use = "complete.obs")
+Dogecoin_Correlation = cor(data_dogecoin$Close, data_dogecoin$`Search Volume`,  method = "spearman",  use = "complete.obs")
+Ethereum_Correlation = cor(data_ethereum$Close, data_ethereum$`Search Volume`,  method = "spearman",  use = "complete.obs")
+Monero_Correlation = cor(data_monero$Close, data_monero$`Search Volume`,  method = "spearman",  use = "complete.obs")
+XRP_Correlation = cor(data_XRP$Close, data_XRP$`Search Volume`,  method = "spearman",  use = "complete.obs")
+#All_Correlation = cor(data$Close, data$`Search Volume`,  method = "spearman",  use = "complete.obs")
+All_Correlation = cor(data$Close, data$`Search Volume`,  method = "spearman",  use = "complete.obs")
+
+
+```
+
+
+# Creating scatter plot of the spearman correlation for the 7 cryptocurrencies 
+```{r echo=FALSE, message=FALSE, warning=FALSE, mfrow=c(2,2)}
+
+par(mfrow=c(2,2))
+# Bitcoin
+Bitcoin = ggscatter(data_bitcoin, x = "Close", y = "Search Volume", 
+          add = "reg.line", add.params = list(color = "red", fill = "lightblue"),conf.int = TRUE, 
+          cor.coef = FALSE, cor.method = "spearman",
+          xlab = "Bitcoin Close Price", ylab = "Search Volume")
+
+# Cardano
+Cardano = ggscatter(data_cardano, x = "Close", y = "Search Volume", 
+          add = "reg.line", add.params = list(color = "red", fill = "lightblue"),conf.int = TRUE, 
+          cor.coef = FALSE, cor.method = "spearman",
+          xlab = "Cardano Close Price", ylab = "Search Volume")
+
+
+# Tether
+Tether = ggscatter(data_tether, x = "Close", y = "Search Volume", 
+          add = "reg.line", add.params = list(color = "red", fill = "lightblue"),conf.int = TRUE, 
+          cor.coef = FALSE, cor.method = "spearman",
+          xlab = "Tether Close Price", ylab = "Search Volume")
+
+#Dogecoin
+Dogecoin = ggscatter(data_dogecoin, x = "Close", y = "Search Volume", 
+          add = "reg.line", add.params = list(color = "red", fill = "lightblue"),conf.int = TRUE, 
+          cor.coef = FALSE, cor.method = "spearman",
+          xlab = "Dogecoin Close Price", ylab = "Search Volume")
+
+# Ethereum
+Ethereum = ggscatter(data_ethereum, x = "Close", y = "Search Volume", 
+          add = "reg.line", add.params = list(color = "red", fill = "lightblue"),conf.int = TRUE, 
+          cor.coef = FALSE, cor.method = "spearman",
+          xlab = "Ethereum Close Price", ylab = "Search Volume")
+
+# Monero 
+Monero = ggscatter(data_monero, x = "Close", y = "Search Volume", 
+          add = "reg.line", add.params = list(color = "red", fill = "lightblue"),conf.int = TRUE, 
+          cor.coef = FALSE, cor.method = "spearman",
+          xlab = "Monero Close Price", ylab = "Search Volume")
+
+# XRP
+XRP = ggscatter(data_XRP, x = "Close", y = "Search Volume", 
+          add = "reg.line", add.params = list(color = "red", fill = "lightblue"), conf.int = TRUE, 
+          cor.coef = FALSE, cor.method = "spearman",
+          xlab = "XRP Close Price", ylab = "Search Volume")
+
+#ggarrange(Bitcoin, Tether, Cardano, Ethereum, Dogecoin, Monero, XRP + rremove("x.text"), ncol = 2, nrow = 2)%>% ggexport(filename = "Correlation_Spearman.png", width=400, height=350, pointsize=11)
+
+
+```
+
+
+
+
+
+
+
