@@ -25,4 +25,6 @@ November & October Data: Used to call in the Twitter data from postman. Combines
 
 Pre-Processing for Sentiment Analysis: Removes stopwords and does lemmatization on data for sentiment analysis 
 
+Sentiment Analysis With Vader: Using VADER to do sentiment analysis 
+
 
