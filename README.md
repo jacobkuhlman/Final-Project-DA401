@@ -19,7 +19,7 @@ Trends and Price Analysis: Used for model assumptions
 
 
 
-Twitter Analysis Files: (November 1st 2nd 3rd 4th 5th 6th 7th 8th Data, October 25th 26th 27th 28th 29th 30th 31st Data, Pre-Processing for Sentiment Analysis)
+Twitter Analysis Files: (November 1st 2nd 3rd 4th 5th 6th 7th 8th Data, October 25th 26th 27th 28th 29th 30th 31st Data, Pre-Processing for Sentiment Analysis, Combined Data)
 
 November & October Data: Used to call in the Twitter data from postman. Combines data and cleans it 
 
@@ -27,4 +27,4 @@ Pre-Processing for Sentiment Analysis: Removes stopwords and does lemmatization 
 
 Sentiment Analysis With Vader: Using VADER to do sentiment analysis 
 
-
+Combined Data: Cleaning the Twitter data 
